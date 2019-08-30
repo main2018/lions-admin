@@ -63,7 +63,7 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    console.log('response', response)
+    // console.log('response', response)
 
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {
@@ -74,12 +74,13 @@ service.interceptors.response.use(
       })
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if ([401, 403, 500, 512, 514].includes(res.code)) {
+      // if ([401, 403, 500, 512, 514].includes(res.code)) {
+      if ([401, 403, 512, 514].includes(res.code)) {
         // to re-login
         // MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
         MessageBox.confirm('登录已过期，可以取消以留在此页，或重新登录', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
+          confirmButtonText: '重新登陆',
+          cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           store.dispatch('user/resetToken').then(() => {
@@ -94,8 +95,11 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error) // for debug
+    const isTimeout = error.code === 'ECONNABORTED' && error.message.indexOf('timeout') !== -1
+
+    const hint = isTimeout ? '请求超时' : '请求失败'
     Message({
-      message: error.message,
+      message: hint,
       type: 'error',
       duration: 5 * 1000
     })

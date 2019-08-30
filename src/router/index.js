@@ -262,6 +262,31 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/org',
+    component: Layout,
+    redirect: '/org/Organization',
+    name: 'Org',
+    meta: {
+      title: '组织',
+      icon: 'tree'
+    },
+    alwaysShow: true,
+    children: [
+      {
+        path: 'Organization',
+        component: () => import('@/views/org/organization'),
+        name: 'OrgOrganization',
+        meta: { title: '组织机构', icon: 'edit' }
+      },
+      {
+        path: 'Position',
+        component: () => import('@/views/org/position'),
+        name: 'OrgPosition',
+        meta: { title: '组织职位', icon: 'edit' }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
